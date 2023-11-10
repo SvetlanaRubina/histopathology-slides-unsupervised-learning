@@ -39,7 +39,7 @@ class HistopathologyDataset(Dataset):
                     self.labels.append(label)
 
     def __len__(self):
-        return 50 #len(self.image_paths)
+        return 100 #len(self.image_paths)
 
     def __getitem__(self, idx):
         image_path = self.image_paths[idx]
