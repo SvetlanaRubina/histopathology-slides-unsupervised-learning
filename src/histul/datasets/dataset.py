@@ -54,4 +54,4 @@ class HistopathologyDataset(Dataset):
             return image, label, file_name
         else:
             file_name = self.file_names[idx]
-            return image
+            return image, file_name

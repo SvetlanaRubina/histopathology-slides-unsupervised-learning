@@ -7,9 +7,14 @@ from src.histul.model import extract_features
 
 def train_clust(train_loader, num_clusters, feature_extractor):
     kmeans = KMeans(n_clusters=num_clusters, random_state=42)
-    features_train = extract_features(train_loader, feature_extractor)
+    features_train, file_names = extract_features(train_loader, feature_extractor)
     kmeans.fit(features_train)
-    return kmeans, features_train
+    return kmeans, features_train, file_names
+
+
+def train_prediction(kmeans, features_train):
+    predicted_labels_train = kmeans.predict(features_train)
+    return predicted_labels_train
 
 
 def test_clust(test_loader, kmeans, feature_extractor):
@@ -27,6 +32,6 @@ def test_clust(test_loader, kmeans, feature_extractor):
     print('Accuracy Score:', accuracy)
     print('Precision:', round(precision, 2))
     print('Recall:', recall)
-    print('F1 Score:', round(f1,2))
+    print('F1 Score:', round(f1, 2))
 
     return accuracy, test_labels, predicted_labels_test, file_names

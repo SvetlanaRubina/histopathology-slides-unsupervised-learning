@@ -34,15 +34,17 @@ def extract_features(image_loader, model, is_test=False):
     file_names = []
     with torch.no_grad(), torch.inference_mode():
         for batch in tqdm(image_loader):
-            features = model(batch[0]) if is_test else model(batch)
+            features = model(batch[0])
             features = features.view(features.size(0), -1)
             features_list.extend(features.detach().cpu().numpy())
             if is_test:
                 labels_list.extend(batch[1].detach().cpu().numpy())
                 file_names.extend(batch[2])
+            else:
+                file_names.extend(batch[1])
     if is_training:
         model.train()
     if is_test:
         return np.array(features_list), np.array(labels_list), np.array(file_names)
     else:
-        return np.array(features_list)
+        return np.array(features_list), np.array(file_names)
