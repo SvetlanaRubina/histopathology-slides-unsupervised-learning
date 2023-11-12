@@ -26,3 +26,9 @@ def plot_confusion_mat(preds, targets):
     plt.ylabel('True Label')
     plt.title('Confusion Matrix')
     plt.show()
+
+def plot_tsne(df_tsne):
+    plt.figure()
+    sns.scatterplot(x='Dim1', y='Dim2', hue='Cluster', data=df_tsne, palette='viridis', s=50)
+    plt.title('t-SNE Visualization of ResNet18 Features with K-Means Clustering')
+    plt.show()

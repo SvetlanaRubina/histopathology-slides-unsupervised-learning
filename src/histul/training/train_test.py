@@ -9,7 +9,7 @@ def train_clust(train_loader, num_clusters, feature_extractor):
     kmeans = KMeans(n_clusters=num_clusters, random_state=42)
     features_train = extract_features(train_loader, feature_extractor)
     kmeans.fit(features_train)
-    return kmeans
+    return kmeans, features_train
 
 
 def test_clust(test_loader, kmeans, feature_extractor):

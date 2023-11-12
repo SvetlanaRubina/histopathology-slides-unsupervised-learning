@@ -2,9 +2,10 @@ from torch.utils.data import DataLoader
 from torchvision.transforms import transforms
 
 from histul.datasets import HistopathologyDataset
-from histul.helpers import seed_everything
-from histul.model import create_vgg16_feature_extractor
+from histul.helpers import seed_everything, save_results
+from histul.model import create_resnet18_feature_extractor, create_feature_extractor
 from histul.training import train_clust, test_clust
+from histul.tsne import tsne
 
 
 def main():
@@ -30,9 +31,15 @@ def main():
     train_loader = DataLoader(dataset=train_dataset, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(dataset=test_dataset, batch_size=batch_size, shuffle=True)
 
-    # train_test(train_loader, test_loader, 2)
-    kmeans = train_clust(train_loader=train_loader, num_clusters=2, feature_extractor=create_vgg16_feature_extractor())
-    test_clust(test_loader=test_loader, kmeans=kmeans, feature_extractor=create_vgg16_feature_extractor())
+    # Choose between vgg16 and resnet18
+    arch = "vgg16"
+    # arch = "resnet18"
+    kmeans, features_train = train_clust(train_loader=train_loader, num_clusters=2,
+                         feature_extractor=create_feature_extractor(arch))
+    accuracy, test_labels, predicted_labels_test, file_names = test_clust(test_loader=test_loader, kmeans=kmeans, feature_extractor=create_feature_extractor(arch))
+
+    df_tsne = tsne(kmeans=kmeans, features_train=features_train)
+    save_results(file_names, predicted_labels_test, "test_predictions")
 
 
 if __name__ == "__main__":
